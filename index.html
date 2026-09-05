@@ -1,0 +1,173 @@
+<!doctype html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111"><link rel="manifest" href="manifest.json">
+<title>Sri Square Accounts</title>
+<style>
+body{margin:0;background:linear-gradient(135deg,#f3f6ff 0%,#fff7f1 50%,#f4fbf8 100%);color:#172033;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,#123c78 0%,#245f9e 52%,#6b3fa0 100%);color:white;padding:22px 18px 18px;position:sticky;top:0;z-index:2;box-shadow:0 4px 14px #173b6a55}h1{margin:0;font-size:25px;letter-spacing:.4px}
+main{max-width:650px;margin:auto;padding:14px 14px 90px}.card{background:rgba(255,255,255,.96);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 5px 18px #243b5a18;border:1px solid #ffffff}
+h2{font-size:19px;margin:4px 0 15px;color:#173f78}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{font-size:12px;color:#53627a;display:block;margin:10px 0 5px;font-weight:600}
+input,button{width:100%;padding:12px;border:1px solid #d9e0ec;border-radius:10px;font-size:16px;box-sizing:border-box}input:focus{outline:2px solid #7db4ef;border-color:#4388d1}
+button{background:linear-gradient(135deg,#1c5aa6,#6a3fa1);color:white;border:0;font-weight:700;margin-top:10px;box-shadow:0 3px 9px #315d9328}.secondary{background:#eef2f8;color:#234a7b;box-shadow:none}
+.row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e7ebf2;padding:8px 0;gap:10px}.row input{max-width:150px;text-align:right}.total{font-weight:800;font-size:18px;color:#173f78}
+.nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.nav button{margin:0;background:#fff;color:#234a7b;border:1px solid #d8e1ef;box-shadow:0 2px 7px #234a7b14}.nav button:hover{background:#eef5ff}.hidden{display:none}.item{padding:12px 0;border-bottom:1px solid #e5eaf2}.muted{color:#65738a;font-size:13px}
+ .reportCard{margin-top:10px;border-left:4px solid #6a3fa1}.reportTop{display:flex;justify-content:space-between;gap:8px}.remarks{background:#fff7df;color:#66501a;padding:8px;border-radius:8px;margin:8px 0;border-left:3px solid #e5ad2f}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid2 button{margin-top:8px}
+
+#printSheet{position:fixed;inset:0;z-index:9999;background:#fff;overflow:auto;padding:16px}.printActions{display:flex;gap:8px;max-width:800px;margin:0 auto 12px}.printActions button{margin:0}.sheet{max-width:800px;margin:0 auto;font-family:Arial,sans-serif;color:#111;font-size:11px}.sheet .head{text-align:center;border-bottom:2px solid #111;padding-bottom:6px;margin-bottom:8px}.sheet h1{font-size:18px;margin:0 0 3px}.sheet h2{font-size:12px;margin:8px 0 4px;border-bottom:1px solid #bbb;padding-bottom:3px}.sheet .meta{display:grid;grid-template-columns:1fr 1fr;gap:3px 16px;margin-bottom:6px}.sheet .remarks{border:1px solid #ccc;padding:5px;margin:5px 0 7px}.sheet .line{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dotted #ccc}.sheet .total{font-weight:700;font-size:12px;border-top:1px solid #111;margin-top:3px;padding-top:4px}.sheet .final{font-weight:800;font-size:14px;border:2px solid #111;padding:6px;margin-top:7px;text-align:right}
+@media print{body>*:not(#printSheet){display:none!important}#printSheet{position:static;display:block;overflow:visible;padding:0}.printActions{display:none!important}.sheet{max-width:none;width:100%;max-height:277mm;font-size:11px}@page{size:A4 portrait;margin:10mm}}
+
+.menuGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0 22px}
+.menuCard{margin:0!important;min-height:92px!important;padding:14px!important;border-radius:18px!important;text-align:left!important;background:#fff!important;border:1px solid #e4e9f2!important;box-shadow:0 5px 16px rgba(35,63,100,.10)!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;position:relative;overflow:hidden}
+.menuCard:after{content:"";position:absolute;right:-22px;top:-22px;width:72px;height:72px;border-radius:50%;opacity:.14}
+.bookingMenu{border-left:5px solid #2878d8!important}.bookingMenu:after{background:#2878d8}
+.savedMenu{border-left:5px solid #18a878!important}.savedMenu:after{background:#18a878}
+.accountMenu{border-left:5px solid #e19a18!important}.accountMenu:after{background:#e19a18}
+.reportMenu{border-left:5px solid #7b4bd6!important}.reportMenu:after{background:#7b4bd6}
+.menuIcon{font-size:25px;font-weight:800;line-height:1;margin-bottom:7px}
+.menuTitle{font-size:17px;font-weight:800;color:#173f72;line-height:1.15}
+.menuSub{font-size:12px;color:#718096;margin-top:4px}
+.menuCard:active{transform:scale(.98)}
+@media(max-width:420px){.menuGrid{gap:10px}.menuCard{min-height:88px!important;padding:12px!important}.menuTitle{font-size:15px}}
+
+.appMenu{position:relative;margin:14px 0 20px}
+.menuToggle{margin:0!important;width:100%;padding:14px 16px!important;border:0!important;border-radius:15px!important;background:linear-gradient(135deg,#2878d8,#6846c7)!important;color:#fff!important;font-size:18px!important;font-weight:800!important;text-align:left!important;box-shadow:0 6px 18px rgba(60,75,160,.20)!important}
+.menuPanel{position:absolute;z-index:20;left:0;right:0;top:58px;background:#fff;border:1px solid #e4e9f2;border-radius:16px;box-shadow:0 12px 28px rgba(35,63,100,.18);padding:8px}
+.menuItem{width:100%;margin:0!important;padding:12px!important;background:#fff!important;border:0!important;border-bottom:1px solid #edf0f5!important;border-radius:10px!important;color:#173f72!important;display:flex!important;align-items:center!important;gap:12px!important;text-align:left!important}
+.menuItem:last-child{border-bottom:0!important}
+.menuItem .mi{width:36px;height:36px;border-radius:11px;background:#eef4ff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800}
+.menuItem b{display:block;font-size:15px}.menuItem small{display:block;color:#7a8699;font-size:11px;margin-top:2px}
+
+.menuToggle{display:flex!important;align-items:center!important;gap:12px!important}
+.hamburger{width:24px;height:20px;display:flex;flex-direction:column;justify-content:space-between;flex:none}
+.hamburger i{display:block;height:3px;width:24px;background:#fff;border-radius:3px}
+
+.otherIncomeBox{margin:12px 0;padding:12px;border-radius:12px;background:#f6f3ff;border:1px solid #ddd4f5;color:#274f80}
+.otherIncomeGrid{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin-top:8px}
+.otherIncomeGrid input{margin:0}
+@media(max-width:420px){.otherIncomeGrid{grid-template-columns:1.7fr 1fr}}
+</style></head><body>
+<header><h1>SRI SQUARE ACCOUNTS</h1></header><main>
+<div class="appMenu">
+  <button class="menuToggle" onclick="toggleMenu()" aria-label="Open menu"><span class="hamburger" aria-hidden="true"><i></i><i></i><i></i></span><span>Menu</span></button>
+  <div id="menuPanel" class="menuPanel hidden">
+    <button class="menuItem" onclick="tab('bookings');closeMenu()"><span class="mi">＋</span><span><b>New Booking</b><small>Create booking</small></span></button>
+    <button class="menuItem" onclick="tab('saved');closeMenu()"><span class="mi">▣</span><span><b>Saved Bookings</b><small>View all bookings</small></span></button>
+    <button class="menuItem" onclick="tab('accounts');closeMenu()"><span class="mi">₹</span><span><b>Accounts</b><small>Income & expenses</small></span></button>
+    <button class="menuItem" onclick="tab('reports');closeMenu()"><span class="mi">▥</span><span><b>Reports</b><small>ID-wise reports</small></span></button>
+  </div>
+</div>
+
+<section id="bookings"><div class="card"><h2>New Booking</h2>
+<div class="grid"><div><label>Booking / Serial No.</label><input id="no" placeholder="SS001"></div><div><label>Event Date</label><input id="date" type="date"></div></div>
+<label>Event Type</label><input id="event" placeholder="Marriage / Reception / Engagement">
+<label>Customer Name</label><input id="name" placeholder="Name"><label>Phone Number</label><input id="phone" type="tel" placeholder="Phone number">
+<div class="grid"><div><label>Total Booking Amount</label><input id="bt" type="number" value="0"></div><div><label>Advance Received</label><input id="ba" type="number" value="0"></div></div>
+<label>Notes</label><input id="notes" placeholder="Optional"><button onclick="saveBooking()">Save Booking</button></div></section><section id="saved" class="hidden"><div class="card"><h2>Saved Bookings</h2><input placeholder="Search booking / name / phone" oninput="renderBookings(this.value)"><div id="list"></div></div></section>
+
+<section id="accounts" class="hidden"><div class="card"><h2>Open Account</h2><input id="find" placeholder="Enter booking number e.g. SS052" oninput="openAccount(this.value)"><div id="acct"></div></div></section>
+
+<section id="reports" class="hidden"><div class="card"><h2>Reports</h2><div id="report"></div></div></section>
+</main>
+<script>
+let db=JSON.parse(localStorage.getItem('ssdb')||'{}'), cur='';
+const $=id=>document.getElementById(id), save=()=>localStorage.setItem('ssdb',JSON.stringify(db)), n=v=>Number(v)||0, money=v=>'₹'+Math.round(v).toLocaleString('en-IN');
+function resetBookingForm(){
+  $('no').value='';
+  $('date').value='';
+  $('event').value='';
+  $('name').value='';
+  $('phone').value='';
+  $('bt').value='0';
+  $('ba').value='0';
+  $('notes').value='';
+}
+
+function toggleMenu(){ $('menuPanel').classList.toggle('hidden'); }
+function closeMenu(){ $('menuPanel').classList.add('hidden'); }
+
+function tab(x){
+  ['bookings','saved','accounts','reports'].forEach(i=>$(i).classList.toggle('hidden',i!==x));
+  if(x==='bookings'){
+    resetBookingForm();
+  }
+  if(x==='saved')renderBookings('');
+  if(x==='reports')renderReport();
+}
+
+function saveBooking(){
+  let k=$('no').value.trim();
+  if(!k)return alert('Enter Booking / Serial No.');
+
+  let old=db[k]||{};
+  db[k]={...old,booking:{
+    date:$('date').value,
+    event:$('event').value,
+    name:$('name').value,
+    phone:$('phone').value,
+    total:n($('bt').value),
+    advance:n($('ba').value),
+    notes:$('notes').value
+  },account:old.account||{
+    rent:n($('bt').value),
+    advance:n($('ba').value),
+    rate:18,
+    expenses:[]
+  }};
+
+  save();
+  resetBookingForm();
+  renderBookings('');
+  if(!$('saved').classList.contains('hidden')) renderBookings('');
+  alert('Saved '+k+'. New Booking is ready.');
+}
+
+function renderBookings(q=''){q=q.toLowerCase();$('list').innerHTML=Object.entries(db).filter(([k,v])=>(k+' '+(v.booking?.name||'')+' '+(v.booking?.phone||'')).toLowerCase().includes(q)).map(([k,v])=>`<div class=item>
+  <div onclick="tab('accounts');$('find').value='${k}';openAccount('${k}')">
+    <b>${k}</b> — ${v.booking?.event||''}<br>
+    <span class=muted>${v.booking?.name||''} • ${v.booking?.phone||''}</span>
+  </div>
+  <button class="deleteBtn" onclick="event.stopPropagation();deleteBooking('${k}')">🗑️ Delete</button>
+</div>`).join('')||'<span class=muted>No bookings yet.</span>'}
+function deleteBooking(k){
+  const b=db[k]?.booking||{};
+  const label=[k,b.name,b.event].filter(Boolean).join(' • ');
+  if(!confirm('Delete '+label+'?\n\nThis will permanently delete the booking, account, expenses and report for this ID.')) return;
+  delete db[k];
+  save();
+  if(cur===k){cur=''; $('acct').innerHTML=''; $('find').value='';}
+  renderBookings('');
+  if(document.getElementById('saved') && !$('saved').classList.contains('hidden')) renderBookings('');if(document.getElementById('reports') && !$('reports').classList.contains('hidden')) renderReport();
+  alert(k+' deleted.');
+}
+
+function openAccount(k){if(!db[k]){$('acct').innerHTML='';return}cur=k;let b=db[k].booking||{},a=db[k].account||{};a.expenses=a.expenses||[];$('acct').innerHTML=`<div class=card><b>${k}</b><div class=muted>${b.event||''} • ${b.name||''} • ${b.phone||''}</div>
+<h2>INCOME / COLLECTION</h2>${field('Rent total','rent',a.rent??b.total)}${field('Advance (-)','advance',a.advance??b.advance)}${out('Rent bal.','rb')}${field('Water','water',a.water)}${field('Power Units','units',a.units)}${field('Power Rate','rate',a.rate??18)}${out('Power Amount','power')}${field('Decoration','decoration',a.decoration)}${field('Lighting','lighting',a.lighting)}
+<div class="otherIncomeBox"><b>Other Income</b><div class="otherIncomeGrid"><input id="a_otherIncomeDetails" type="text" value="${esc(a.otherIncomeDetails||'')}" placeholder="Details"><input id="a_otherIncomeAmount" type="number" value="${a.otherIncomeAmount||0}" placeholder="Amount" oninput="calc()"></div></div>
+${out('TOTAL','income',1)}
+<h2>EXPENSES</h2><div id=ex>${a.expenses.map((e,i)=>expense(e,i)).join('')}</div><button class=secondary onclick="addEx()">＋ Add Expense</button>${out('EXP Total','exp',1)}${out('TOTAL - EXP','final',1)}
+<button onclick="saveAccount()">Save Account</button></div>`;calc();}
+function field(label,id,val){return `<div class=row><span>${label}</span><input id=a_${id} type=number value="${val||0}" oninput="calc()"></div>`}function out(label,id,big){return `<div class="row total"><span>${label}</span><span id=o_${id}>₹0</span></div>`}
+function expense(e,i){return `<div class=row><input class=exn value="${(e.name||'').replaceAll('"','&quot;')}"><input class=exa type=number value="${e.amount||0}" oninput="calc()"></div>`}
+function addEx(){$('ex').insertAdjacentHTML('beforeend',expense({name:'',amount:0},0));}
+function calc(){if(!cur)return;let a=id=>n($('a_'+id)?.value),rb=a('rent')-a('advance'),p=a('units')*a('rate'),oi=a('otherIncomeAmount'),inc=rb+a('water')+p+a('decoration')+a('lighting')+oi,ex=[...document.querySelectorAll('.exa')].reduce((s,x)=>s+n(x.value),0);['rb','power','income','exp','final'].forEach((id,i)=>$('o_'+id).textContent=money([rb,p,inc,ex,inc-ex][i]));}
+function saveAccount(){let a=id=>n($('a_'+id)?.value),ex=[...document.querySelectorAll('#ex .row')].map(r=>({name:r.querySelector('.exn').value,amount:n(r.querySelector('.exa').value)}));db[cur].account={rent:a('rent'),advance:a('advance'),water:a('water'),units:a('units'),rate:a('rate'),decoration:a('decoration'),lighting:a('lighting'),otherIncomeDetails:$('a_otherIncomeDetails')?.value||'',otherIncomeAmount:a('otherIncomeAmount'),expenses:ex};save();alert('Account saved for '+cur);}
+function reportData(k){let b=db[k]?.booking||{},a=db[k]?.account||{};let rent=n(a.rent??b.total),adv=n(a.advance??b.advance),water=n(a.water),units=n(a.units),rate=n(a.rate||18),power=units*rate,deco=n(a.decoration),light=n(a.lighting),otherIncome=n(a.otherIncomeAmount),otherIncomeDetails=a.otherIncomeDetails||'',rentbal=rent-adv,total=rentbal+water+power+deco+light+otherIncome,expenses=a.expenses||[],ex=expenses.reduce((s,e)=>s+n(e.amount),0);return {b,a,rent,adv,water,units,rate,power,deco,light,otherIncome,otherIncomeDetails,rentbal,total,expenses,ex,final:total-ex};}
+function reportText(k){let d=reportData(k),b=d.b;let date=b.date?new Date(b.date+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'';let ex=d.expenses.filter(e=>e.name||n(e.amount)).map(e=>`${e.name||'Expense'} : ${money(e.amount)}`).join('\n')||'No expenses';return `SRI SQUARE ACCOUNTS\n\n${k}  |  ${date}${b.event?'  |  '+b.event:''}\nCustomer: ${b.name||'-'}${b.phone?'  |  '+b.phone:''}\nRemarks: ${b.notes||'-'}\n\nINCOME / COLLECTION\nRent total : ${money(d.rent)}\nAdvance (-) : ${money(d.adv)}\nRent bal. : ${money(d.rentbal)}\nWater : ${money(d.water)}\nPower Units : ${money(d.units)} × ${money(d.rate)} = ${money(d.power)}\nDecoration : ${money(d.deco)}\nLighting : ${money(d.light)}\n${d.otherIncome || d.otherIncomeDetails ? `Other Income${d.otherIncomeDetails?' - '+d.otherIncomeDetails:''} : ${money(d.otherIncome)}` : ''}\nTOTAL = ${money(d.total)}\n\nEXPENSES\n${ex}\nEXP Total = ${money(d.ex)}\n\nTOTAL - EXP = ${money(d.total)} - ${money(d.ex)}\nTOTAL BAL = ${money(d.final)}`;}
+function shareBookingReport(k){let text=reportText(k);if(navigator.share){navigator.share({title:'Sri Square Account - '+k,text}).catch(e=>{if(e.name!=='AbortError')console.error(e)});}else if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('Report copied. You can paste it into WhatsApp or any app.'));}else alert(text);}
+function pdfBookingReport(k){
+  let d=reportData(k),b=d.b,date=b.date?new Date(b.date+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'';
+  let ex=d.expenses.filter(e=>e.name||n(e.amount));
+  let rows=ex.length?ex.map(e=>`<div class="line"><span>${esc(e.name||'Expense')}</span><b>${money(e.amount)}</b></div>`).join(''):`<div class="line"><span>No expenses</span><b>₹0</b></div>`;
+  let old=document.getElementById('printSheet'); if(old) old.remove();
+  let box=document.createElement('div'); box.id='printSheet'; box.innerHTML=`<div class="printActions"><button onclick="closePrintSheet()">← Back to App</button><button onclick="window.print()">📄 Save / Print PDF</button></div><div class="sheet"><div class="head"><h1>SRI SQUARE ACCOUNTS</h1><div><b>${esc(k)}</b>${date?' • '+esc(date):''}${b.event?' • '+esc(b.event):''}</div></div><div class="meta"><div><b>Customer:</b> ${esc(b.name||'-')}</div><div><b>Phone:</b> ${esc(b.phone||'-')}</div></div><div class="remarks"><b>Remarks:</b> ${esc(b.notes||'-')}</div><h2>INCOME / COLLECTION</h2><div class="line"><span>Rent total</span><b>${money(d.rent)}</b></div><div class="line"><span>Advance (-)</span><b>${money(d.adv)}</b></div><div class="line"><span>Rent bal.</span><b>${money(d.rentbal)}</b></div><div class="line"><span>Water</span><b>${money(d.water)}</b></div><div class="line"><span>Power Units</span><b>${money(d.units)} × ${money(d.rate)} = ${money(d.power)}</b></div><div class="line"><span>Decoration</span><b>${money(d.deco)}</b></div><div class="line"><span>Lighting</span><b>${money(d.light)}</b></div>${d.otherIncome || d.otherIncomeDetails ? `<div class="line"><span>Other Income${d.otherIncomeDetails?" - "+esc(d.otherIncomeDetails):""}</span><b>${money(d.otherIncome)}</b></div>` : ""}<div class="line total"><span>TOTAL</span><b>${money(d.total)}</b></div><h2>EXPENSES</h2>${rows}<div class="line total"><span>EXP Total</span><b>${money(d.ex)}</b></div><div class="line total"><span>TOTAL - EXP</span><b>${money(d.total)} - ${money(d.ex)}</b></div><div class="final">TOTAL BAL : ${money(d.final)}</div></div>`;
+  document.body.appendChild(box);
+  window.scrollTo(0,0);
+}
+function closePrintSheet(){let el=document.getElementById('printSheet');if(el)el.remove();window.scrollTo(0,0);}
+window.addEventListener('afterprint',()=>{setTimeout(()=>closePrintSheet(),300);});
+
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderReport(){let keys=Object.keys(db);if(!keys.length){$('report').innerHTML='<span class="muted">No bookings yet.</span>';return;}$('report').innerHTML=keys.map(k=>{let d=reportData(k),b=d.b;return `<div class="card reportCard"><div class="reportTop"><div><b>${esc(k)}</b> — ${esc(b.event||'')}</div><span class="muted">${b.date?esc(new Date(b.date+'T00:00:00').toLocaleDateString('en-IN')):''}</span></div><div><b>${esc(b.name||'')}</b>${b.phone?' • '+esc(b.phone):''}</div><div class="remarks"><b>Remarks:</b> ${esc(b.notes||'-')}</div><div class="line"><span>Total</span><b>${money(d.total)}</b></div><div class="line"><span>Expenses</span><b>${money(d.ex)}</b></div><div class="line total"><span>Final Balance</span><b>${money(d.final)}</b></div><div class="grid2"><button onclick="shareBookingReport('${esc(k)}')">📤 Share</button><button onclick="pdfBookingReport('${esc(k)}')">📄 PDF</button></div></div>`}).join('');}
+renderBookings();
+</script></body></html>
