@@ -323,4 +323,7 @@ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function renderReport(){let keys=Object.keys(db);if(!keys.length){$('report').innerHTML='<span class="muted">No bookings yet.</span>';return;}$('report').innerHTML=keys.map(k=>{let d=reportData(k),b=d.b;return `<div class="card reportCard"><div class="reportTop"><div><b>${esc(k)}</b> — ${esc(b.event||'')}</div><span class="muted">${b.date?esc(new Date(b.date+'T00:00:00').toLocaleDateString('en-IN')):''}</span></div><div><b>${esc(b.name||'')}</b>${b.phone?' • '+esc(b.phone):''}</div><div class="remarks"><b>Remarks:</b> ${esc(b.notes||'-')}</div><div class="line"><span>Total</span><b>${money(d.total)}</b></div><div class="line"><span>Expenses</span><b>${money(d.ex)}</b></div><div class="line total"><span>Final Balance</span><b>${money(d.final)}</b></div><div class="grid2"><button onclick="shareBookingReport('${esc(k)}')">📤 Share</button><button onclick="pdfBookingReport('${esc(k)}')">📄 PDF</button></div><button onclick="whatsappBookingConfirmation('${esc(k)}')">💬 Send Booking Confirmation on WhatsApp</button></div>`}).join('');}
 setupMenu();
 renderBookings();
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(e){ console.log("Offline mode registration failed", e); }); });
+}
 </script></body></html>
